@@ -28,6 +28,7 @@ export default class Dropdown extends PureComponent {
 
     valueExtractor: ({ value } = {}, index) => value,
     labelExtractor: ({ label } = {}, index) => label,
+    styleExtractor: ({ label } = {}, index) => {},
     propsExtractor: () => null,
 
     absoluteRTLLayout: false,
@@ -480,15 +481,18 @@ export default class Dropdown extends PureComponent {
       data,
       renderBase,
       labelExtractor,
+      styleExtractor,
       dropdownOffset,
       renderAccessory = this.renderAccessory,
     } = this.props;
 
     let index = this.selectedIndex();
     let title;
+    let styleTitle = {};
 
     if (~index) {
       title = labelExtractor(data[index], index);
+      styleTitle = styleExtractor(data[index], index);
     }
 
     if (null == title) {
@@ -505,6 +509,7 @@ export default class Dropdown extends PureComponent {
 
     return (
       <TextField
+        style={styleTitle}
         label=''
         labelHeight={dropdownOffset.top - Platform.select({ ios: 1, android: 2 })}
 
@@ -583,6 +588,7 @@ export default class Dropdown extends PureComponent {
       rippleOpacity,
       rippleDuration,
       shadeOpacity,
+      styleExtractor,
     } = this.props;
 
     let props = propsExtractor(item, index);
@@ -604,6 +610,7 @@ export default class Dropdown extends PureComponent {
 
     let value = valueExtractor(item, index);
     let label = labelExtractor(item, index);
+    let itemStyle = styleExtractor(item, index);
 
     let title = null == label?
       value:
@@ -630,7 +637,7 @@ export default class Dropdown extends PureComponent {
 
     return (
       <DropdownItem index={index} {...props}>
-        <Text style={[styles.item, itemTextStyle, textStyle]} numberOfLines={1}>
+        <Text style={[styles.item, itemTextStyle, textStyle, itemStyle]} numberOfLines={1}>
           {title}
         </Text>
       </DropdownItem>
